@@ -1,0 +1,70 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments/header :: header" />
+<script th:inline="javascript">
+    /*<![CDATA[*/
+    var updateResult = /*[[${update_result}]]*/ '';
+    if (updateResult === 'ok') {
+        alert('수정이 완료되었습니다.');
+    }
+    $(document).ready(function (){
+        $('#boardDelete').click(function (){
+            let id = $('#boardDelete').data('boardid');
+            if (confirm("정말로 삭제하시겠습니까?")) {
+                $.ajax({
+                    url: "/boardDelete/"+id,
+                    type: "DELETE",
+                    success: function () {
+                        alert("삭제 완료되었습니다");
+                        location.href="/board";
+                    },
+                });
+            }
+        });
+    });
+    /*]]>*/
+</script>
+<body>
+
+<div class="container">
+    <div th:replace="fragments/bodyHeader :: bodyHeader" />
+    <div>
+        <table class="table table-striped text-center">
+            <thead>
+            <tr>
+                <th>제목</th>
+                <th>내용</th>
+                <th>조회수</th>
+                <th>등록일</th>
+            </tr>
+            </thead>
+            <tbody>
+                <td th:text="${boardContent.btitle}"></td>
+                <td th:text="${boardContent.bcontent}"></td>
+                <td th:text="${boardContent.bhits}"></td>
+                <td th:text="${boardContent.createdDate}"></td>
+            </tr>
+            </tbody>
+        </table>
+        <div class="text-center">
+            <a th:href="@{/board/boardUpdate/{id}(id=${boardContent.id})}">
+                <button type="button" class="btn btn-primary">수정하기</button></a>
+            <button type="button" id="boardDelete"
+                    th:attr="data-boardid=${boardContent.id}" class="btn btn-primary">삭제하기</button>
+            <a th:href="@{/board}">
+                <button class="btn btn-primary">목록으로</button></a>
+        </div>
+
+
+
+
+
+
+    </div>
+
+    <div th:replace="fragments/footer :: footer" />
+
+</div> <!-- /container -->
+
+</body>
+</html>

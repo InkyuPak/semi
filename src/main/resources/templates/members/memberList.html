@@ -1,0 +1,82 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments/header :: header" />
+<body>
+
+<div class="container">
+    <div th:replace="fragments/bodyHeader :: bodyHeader" />
+    <div>
+        <table class="table table-striped text-center">
+            <thead>
+            <tr>
+                <th>#</th>
+                <th>ID</th>
+                <th>이름</th>
+                <th>성별</th>
+                <th>이메일</th>
+                <th>가입날짜</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="member, i : ${members}">
+                <td th:text="${i.index + 1}"></td>
+                <td th:text="${member.userId}"></td>
+                <td th:text="${member.username}"></td>
+                <td th:text="${member.gender}"></td>
+                <td th:text="${member.email}"></td>
+                <td th:text="${member.createdDate}"></td>
+<!--                <td th:text="${member.address?.city}"></td>-->
+<!--                <td th:text="${member.address?.street}"></td>-->
+<!--                <td th:text="${member.address?.zipcode}"></td>-->
+            </tr>
+            </tbody>
+        </table>
+        <!-- 페이지 네비게이션 -->
+        <nav>
+            <ul class="pagination justify-content-center">
+                <!-- 이전 페이지 링크 -->
+                <li th:class="${currentPage == 0 ? 'page-item disabled' : 'page-item'}">
+                    <a th:if="${currentPage != 0}" th:href="@{/members(page=0)}" class="page-link">First</a>
+                    <span th:unless="${currentPage != 0}" class="page-link">First</span>
+                </li>
+
+                <!-- 이전 5 페이지 링크 -->
+                <li th:class="${currentPage == 0 ? 'page-item disabled' : 'page-item'}">
+                    <a th:if="${currentPage != 0}" th:href="@{/members(page=${currentPage - 1})}" class="page-link">Previous</a>
+                    <span th:unless="${currentPage != 0}" class="page-link">Previous</span>
+                </li>
+
+                <!-- 현재 페이지와 다음 4 페이지 링크 -->
+                <th:block th:each="pageNumber : ${#numbers.sequence(currentPage, currentPage + 4)}"
+                          th:if="${pageNumber < totalPages}">
+                    <li th:class="${pageNumber == currentPage ? 'page-item active' : 'page-item'}">
+                        <a th:href="@{/members(page=${pageNumber})}" class="page-link" th:text="${pageNumber + 1}"></a>
+                    </li>
+                </th:block>
+
+                <!-- 다음 5 페이지 링크 -->
+                <li th:class="${currentPage + 5 >= totalPages ? 'page-item disabled' : 'page-item'}">
+                    <a th:if="${currentPage + 5 < totalPages}" th:href="@{/members(page=${currentPage + 5})}" class="page-link">Next</a>
+                    <span th:unless="${currentPage + 5 < totalPages}" class="page-link">Next</span>
+                </li>
+
+                <!-- 마지막 페이지 링크 -->
+                <li th:class="${currentPage + 1 == totalPages ? 'page-item disabled' : 'page-item'}">
+                    <a th:if="${currentPage + 1 < totalPages}" th:href="@{/members(page=${totalPages - 1})}" class="page-link">Last</a>
+                    <span th:unless="${currentPage + 1 < totalPages}" class="page-link">Last</span>
+                </li>
+            </ul>
+        </nav>
+
+
+
+
+
+    </div>
+
+    <div th:replace="fragments/footer :: footer" />
+
+</div> <!-- /container -->
+
+</body>
+</html>

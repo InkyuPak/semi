@@ -1,0 +1,85 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments/header :: header" />
+<body>
+
+<div class="container">
+    <div th:replace="fragments/bodyHeader :: bodyHeader" />
+    <div>
+        <table class="table table-striped text-center">
+            <thead>
+            <tr>
+                <th>#</th>
+                <th>제목</th>
+                <th>조회수</th>
+                <th>등록일</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="board, index : ${list}">
+                <td th:text="${totalCount - (size * number) - index.index}"></td>
+                <td>
+                    <a th:href="@{/board/boardContent/{id}(id=${board.id})}" th:text="${board.btitle}">제목</a></td>
+                <td th:text="${board.bhits}"></td>
+                <td th:text="${board.createdDate}"></td>
+            </tr>
+            </tbody>
+        </table>
+        <!-- 페이지 네비게이션 -->
+      <!--  <nav class="container d-flex align-items-center justify-content-center" aria-label="Page navigation example"
+             th:with="start=${(list.number/maxPage)*maxPage + 1},
+                      end=(${(list.totalPages == 0) ? 1 : (start + (maxPage - 1) < list.totalPages ? start + (maxPage - 1) : list.totalPages)})">
+            <ul class="pagination">
+
+                <li th:if="${start > 1}" class="page-item">
+                    <a th:href="@{/?(page=0, searchVal=${searchVal})}" class="page-link" href="#" aria-label="Previous">
+                        <span aria-hidden="true">&laquo;&laquo;</span>
+                    </a>
+                </li>
+
+                <li th:if="${start > 1}" class="page-item">
+                    <a th:href="@{/?(page=${start - maxPage-1}, searchVal=${searchVal})}" class="page-link" href="#" aria-label="Previous">
+                        <span aria-hidden="true">&laquo;</span>
+                    </a>
+                </li>
+
+                <li th:each="page: ${#numbers.sequence(start, end)}" class="page-item" th:classappend="${list.number+1 == page} ? active">
+                    <a th:href="@{/?(page=${page-1}, searchVal=${searchVal})}" th:text="${page}" class="page-link" href="#">1</a>
+                </li>
+
+                <li th:if="${end < list.totalPages}" class="page-item">
+                    <a th:href="@{/?(page=${start + maxPage -1}, searchVal=${searchVal})}" class="page-link" href="#" aria-label="Next">
+                        <span aria-hidden="true">&raquo;</span>
+                    </a>
+                </li>
+
+                <li th:if="${end < list.totalPages}" class="page-item">
+                    <a th:href="@{/?(page=${list.totalPages-1}, searchVal=${searchVal})}" class="page-link" href="#" aria-label="Next">
+                        <span aria-hidden="true">&raquo;&raquo;</span>
+                    </a>
+                </li>
+            </ul>
+        </nav>-->
+
+    <form class="form-group" th:method="post" th:action="@{/board/boardSearch}">
+        <div class="text-center">
+            <select id="searchType" name="searchType">
+                <option th:each="type : ${searchTypes}"
+                    th:value="${type}"
+                    th:text="${type.description}"></option>
+            </select>
+            <input type="text" id="keyword" name="keyword">
+            <button type="submit" class="btn btn-primary">검색</button>
+        </div>
+    </form>
+
+
+
+    </div>
+
+    <div th:replace="fragments/footer :: footer" />
+
+</div> <!-- /container -->
+
+</body>
+</html>

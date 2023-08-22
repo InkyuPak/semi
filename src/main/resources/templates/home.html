@@ -1,0 +1,57 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments/header :: header">
+    <title>SEMI Project</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+</head>
+<style>
+    .index a{
+        text-decoration: none;
+        cursor: pointer;
+        background-color: #ffffff;
+        margin-right: 10px;
+        color: #17a2b8;
+    }
+
+    .index h4{
+        font-family: Helvetica, sans-serif;
+        color: gray;
+    }
+</style>
+<body>
+
+<div class="container">
+
+    <div th:replace="fragments/bodyHeader :: bodyHeader" />
+    <div class="index">
+        <div class="row">
+            <div class="col-md-4">
+                <h4>회원 기능</h4>
+                <p>
+                    <a href="/members/new">회원 가입</a>
+                    <a href="/members">회원 목록</a>
+                </p>
+            </div>
+            <div class="col-md-4">
+                <h4>게시판</h4>
+                <p>
+                    <a href="/board/boardCreate">게시글 등록</a>
+                    <a href="/board">게시판</a>
+                </p>
+            </div>
+            <div class="col-md-4">
+                <h4>상품 주문</h4>
+                <p>
+                    <a href="/order">상품 주문</a>
+                    <a href="/orders">주문 내역</a>
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <div th:replace="fragments/footer :: footer" />
+
+</div> <!-- /container -->
+
+</body>
+</html>

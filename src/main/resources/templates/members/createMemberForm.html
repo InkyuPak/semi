@@ -1,0 +1,197 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments/header :: header" />
+<style>
+    .newMember .form-group {
+        margin-bottom: 20px;
+    }
+
+    .newMember .form-group label {
+        float: left;
+        width: 150px;
+        margin: 0 10px 0 0;
+        padding-top: 7px;
+    }
+    .newMember .form-group btn {
+        margin-left: 500px;
+    }
+
+    .newMember .form-control {
+        width: 50%;
+    }
+</style>
+<script th:inline="javascript">
+    /*<![CDATA[*/
+    $(document).ready(function (){
+        $('#idDuplicateCheck').click(function () {
+            let userId = $('#userId').val();
+            if (userId == "") {
+                alert("아이디를 입력해주세요.");
+                $('#userId').focus();
+                return false;
+            }
+            $.ajax({
+                url: '/idDuplicateProc/'+userId,
+                success: function (result) {
+                    if (result == 1) {
+                        $('#idCheck_msg').text("이미 사용중인 아이디입니다.").css("color", "red")
+                            .css("display", "block");
+                        $('#userId').focus();
+                    } else {
+                        $('#idCheck_msg').text("사용 가능한 아이디입니다").css("color", "blue")
+                            .css("display", "block");
+                        $('#password').focus();
+                    }
+                }
+
+
+            });
+        });
+
+        $('#cpassword').on("blur", function (){
+            if ($('#password') != "" && $('#cpassword') != "") {
+                if ($('#password').val() == $('#cpassword').val()) {
+                    $('#cmsg').text("비밀번호가 일치합니다").css("color", "blue").css("display", "block");
+                } else {
+                    $('#cmsg').text("비밀번호가 일치하지 않습니다").css("color", "red").css("display", "block");
+                }
+            }
+        });
+
+        $('#email3').on("change", function (){
+            if ($('#email3').val() == "defalut" && $('#email2').val() == "") {
+                alert("이메일을 입력하거나 선택해주세요");
+                $('#email3').focus();
+            } else {
+                $('#email2').val($('#email3').val());
+            }
+        });
+
+
+        $('form').submit(function () {
+            var email1 = $('#email1').val();
+            var email2 = $('#email2').val();
+            var email = email1 + "@" + email2;
+            $('#email').val(email);
+        });
+
+    });
+    /*]]>*/
+</script>
+<style>
+    .fieldError {
+        color: red;
+    }
+</style>
+<body>
+
+<div class="container">
+    <div th:replace="fragments/bodyHeader :: bodyHeader"/>
+
+    <div class="newMember">
+        <form role="form" action="/members/new" th:object="${form}" method="post">
+            <div class="form-group">
+                <label th:for="userId">아이디</label>
+                    <input type="text" th:field="*{userId}" class="form-control" placeholder="아이디를 입력하세요"
+                           th:class="${#fields.hasErrors('userId')}? 'form-control fieldError' : 'form-control'">
+                    <button type="button"  id="idDuplicateCheck" class="btn btn-outline-secondary">중복 체크</button>
+                    <p th:if="${#fields.hasErrors('userId')}" th:errors="*{userId}" class="fieldError">Incorrect date</p>
+                    <span id="idCheck_msg"></span>
+            </div>
+            <div class="form-group">
+                <label th:for="password">비밀번호</label>
+
+                <input type="password" th:field="*{password}" id="password" class="form-control" placeholder="비밀번호를 입력하세요"
+                       th:class="${#fields.hasErrors('password')}? 'form-control fieldError' : 'form-control'">
+                <p th:if="${#fields.hasErrors('password')}" th:errors="*{password}" class="fieldError">Incorrect date</p>
+
+            </div>
+            <div class="form-group">
+                <label th:for="cpassword">비밀번호 확인</label>
+                <input type="password" id="cpassword" name="cpassword" class="form-control" placeholder="비밀번호를 확인 해주세요">
+                <span id="cmsg"></span>
+            </div>
+            <div class="form-group">
+                <label th:for="username">이름</label>
+
+                <input type="text" th:field="*{username}" class="form-control" placeholder="이름을 입력하세요"
+                       th:class="${#fields.hasErrors('username')}? 'form-control fieldError' : 'form-control'">
+                <p th:if="${#fields.hasErrors('username')}" th:errors="*{username}" class="fieldError">Incorrect date</p>
+
+            </div>
+            <div class="form-group">
+                <label th:for="gender">성별</label>
+                <div th:each="type : ${gender}" class="form-check form-check-inline">
+                    <input type="radio" th:field="*{gender}" th:value="${type.name()}" class="form-check-input">
+                    <label th:for="${#ids.prev('gender')}" th:text="${type.description}" class="form-check-label"></label>
+                </div>
+                <p th:if="${#fields.hasErrors('gender')}" th:errors="*{gender}" class="fieldError">Incorrect date</p>
+            </div>
+            <div class="form-group">
+                <div>통신사</div>
+
+                <select th:field="*{tel}" class="form-select" style="width: 15%">
+                    <option value="">선택</option>
+                    <option th:each="tel : ${tel}" th:value="${tel.code}" th:text="${tel.displayName}"></option>
+                </select>
+                <p th:if="${#fields.hasErrors('tel')}" th:errors="*{tel}" class="fieldError">Incorrect date</p>
+
+
+            </div>
+            <div class="form-group">
+                <label th:for="phoneNumber">전화번호</label>
+
+                <input type="text" th:field="*{phoneNumber}" class="form-control" placeholder="전화번호를 입력하세요"
+                       th:class="${#fields.hasErrors('phoneNumber')}? 'form-control fieldError' : 'form-control'">
+                <p th:if="${#fields.hasErrors('phoneNumber')}" th:errors="*{phoneNumber}" class="fieldError">Incorrect date</p>
+
+            </div>
+            <div class="form-group">
+                <label th:for="email">이메일</label>
+
+                <input type="text" name="email1" id="email1" class="form-control-sm"> @
+                <input type="text" name="email2" id="email2" class="form-control-sm">
+                <select id="email3" class="form-control-sm">
+                    <option value="defalut">직접 입력</option>
+                    <option value="naver.com">네이버</option>
+                    <option value="google.com">구글</option>
+                    <option value="daum.net">다음</option>
+                </select>
+                <input type="hidden" th:field="*{email}" id="email" />
+
+            </div>
+            <div class="form-group">
+                <label th:for="zipcode">우편번호</label>
+                <input type="text" th:field="*{address.zipcode}" class="form-control" placeholder="우편번호를 입력하세요" readonly>
+                <button type="button" class="btn btn-outline-secondary" id="btnSearchAddr">주소찾기</button>
+            </div>
+            <div class="form-group">
+                <label th:for="city">주소</label>
+                <input type="text" th:field="*{address.city}" class="form-control" placeholder="도시를 입력하세요" readonly>
+            </div>
+            <div class="form-group">
+                <label th:for="street">상세 주소</label>
+                <input type="text" th:field="*{address.street}" class="form-control" placeholder="거리를 입력하세요">
+            </div>
+
+            <button type="submit" class="btn btn-outline-secondary">회원 가입</button>
+        </form>
+    </div>
+    <div th:replace="fragments/footer :: footer" />
+</div> <!-- /container -->
+<script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
+<script th:inline="javascript">
+    /*<![CDATA[*/
+    $('#btnSearchAddr').click(function (){
+        new daum.Postcode({
+            oncomplete: function (data) {
+                $('#address\\.zipcode').val(data.zonecode);
+                $('#address\\.city').val(data.address);
+                $('#address\\.street').focus();
+            }
+        }).open();
+    });
+    /*]]>*/
+</script>
+</body>
+</html>

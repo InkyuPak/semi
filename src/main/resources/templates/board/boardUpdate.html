@@ -1,0 +1,58 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments/header :: header" />
+<style>
+    .fieldError {
+        border-color: #bd2130;
+        color: #bd2130;
+    }
+</style>
+<body>
+
+<div class="container">
+    <div th:replace="fragments/bodyHeader :: bodyHeader" />
+    <div>
+        <form action="boardContent.html" th:action th:object="${boardContent}" method="post">
+        <table class="table table-striped text-center">
+            <thead>
+            <tr>
+                <th>제목</th>
+                <th>내용</th>
+                <th>조회수</th>
+                <th>등록일</th>
+            </tr>
+            </thead>
+            <tbody>
+                <td>
+                    <input type="text" th:field="*{btitle}" class="form-control">
+                    <p th:if="${#fields.hasErrors('btitle')}" th:errors="*{btitle}" class="fieldError"></p>
+                </td>
+                <td>
+                    <textarea th:field="*{bcontent}" class="form-control"></textarea>
+                    <p th:if="${#fields.hasErrors('bcontent')}" th:errors="*{bcontent}" class="fieldError"></p>
+                </td>
+                <td th:text="*{bfile}"></td>
+                <td th:text="*{bsfile}"></td>
+            </tr>
+            </tbody>
+        </table>
+            <div class="text-center">
+                <button type="submit" class="btn btn-primary">수정완료</button>
+                <button class="btn btn-primary" type="button"
+                    onclick="location.href='boardContent.html'"
+                    th:onclick="|location.href='@{/board/boardContent/{id}(id=*{id})}'|">이전으로</button>
+            </div>
+        </form>
+
+
+
+
+
+    </div>
+
+    <div th:replace="fragments/footer :: footer" />
+
+</div> <!-- /container -->
+
+</body>
+</html>

@@ -1,0 +1,41 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments/header :: header" />
+<style>
+    .fieldError {
+        border-color: #bd2130;
+        color: #bd2130;
+    }
+</style>
+<body>
+
+<div class="container">
+    <div th:replace="fragments/bodyHeader :: bodyHeader" />
+    <h1>게시글 등록</h1>
+    <form role="form" action="/board/boardCreate" th:object="${form}" method="post">
+        <table class="table table-striped text-center">
+            <tr>
+                <th>제목</th>
+                <td>
+                    <input type="text" class="form-control" th:field="*{btitle}">
+                    <p th:if="${#fields.hasErrors('btitle')}" th:errors="*{btitle}" class="fieldError"></p>
+                </td>
+            </tr>
+            <tr>
+                <th>내용</th>
+                <td>
+                    <input type="text" class="form-control" th:field="*{bcontent}">
+                </td>
+            </tr>
+            </tbody>
+        </table>
+        <div class="text-center">
+            <button type="submit" class="btn btn btn-primary">등록</button>
+        </div>
+    </form>
+    <div th:replace="fragments/footer :: footer" />
+
+</div> <!-- /container -->
+
+</body>
+</html>
